@@ -2,7 +2,7 @@
     "roomName":"css",
     "language":"css",
     "users":0,
-    "value":""
+    "value":"#logo{ height:   30px;   color:#fbfbfb }"
 },{
     "roomName":"html",
     "language":"html",

@@ -55,7 +55,7 @@ const CodeRoom: React.FC = () => {
           </div>) }
           <Editor 
           min-height="fit-content"
-          height="55vw"
+          height="40vw"
           width="90vw"
           theme="vs-dark"
           onMount={handelEditorDidMount}
