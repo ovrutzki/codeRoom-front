@@ -28,5 +28,7 @@
 .room-box:hover{
     background-color:  #1081a6;
     font-weight: bold;
+    scale: 1.1;
+
 }
 

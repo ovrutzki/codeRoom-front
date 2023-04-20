@@ -2,6 +2,7 @@ import React from "react";
 import "./HomePage.css";
 import data from '../../rooms.json'
 import { useNavigate } from "react-router-dom";
+import GeneralButton from "../GeneralButton/GeneralButton";
 
 interface IRoom{
   roomName:string,

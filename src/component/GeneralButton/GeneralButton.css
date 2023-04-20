@@ -1,11 +1,19 @@
+*{
+    transition:0.7ms;
+}
 button{
     all: unset;
-    width: ;
-    height: ;
-    text-align: ;
-    font-size: ;
+    width: fit-content;
+    min-width: 8vw;
+    height: 4vw;
+    text-align: center;
+    font-size: 2vw;
+    border-radius: 4px;
+    padding: 4px 14px;
 }
 
 button:hover{
-    
+    cursor: pointer;
+    scale: 1.1;
+    font-weight: bold;
 }
