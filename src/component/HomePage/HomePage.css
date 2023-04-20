@@ -1,0 +1,32 @@
+#container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#titles-div h1{
+}
+#titles-div h2{
+}
+#rooms-div{
+    display: flex;
+    gap: 3vw;
+}
+.room-box{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #149eca;
+    width: 15vw;
+    height: 15vw;
+    border-radius: 4px;
+    color:#23272f ;
+    font-size: 4vw;
+}
+.room-box:hover{
+    background-color:  #1081a6;
+    font-weight: bold;
+}
+
