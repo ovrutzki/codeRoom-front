@@ -19,8 +19,8 @@ const HomePage: React.FC = () => {
       </div>
         <h2>chose a room and get started</h2>
       <div id="rooms-div">
-        {data.map((room:IRoom) => 
-        <div className="room-box" onClick={() =>navigate(`room/${room.roomName}`)}>{room.roomName}</div>
+        {data.map((room:IRoom,index:number) => 
+        <div key={index} className="room-box" onClick={() =>navigate(`room/${room.roomName}`)}>{room.roomName}</div>
         )}
       </div>
       </div>
