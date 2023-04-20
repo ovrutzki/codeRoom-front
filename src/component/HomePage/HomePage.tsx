@@ -6,8 +6,9 @@ import GeneralButton from "../GeneralButton/GeneralButton";
 
 interface IRoom{
   roomName:string,
-  content:string,
-  users:number
+  language:string,
+  users:number,
+  value:string
 }
 const HomePage: React.FC = () => {
   const navigate = useNavigate()

@@ -1,0 +1,18 @@
+header{
+    display: flex;
+    justify-content: space-between;
+    padding: 2vw;
+}
+#logo{
+    height: 30px;
+    color:#fbfbfb
+}
+header div{
+    color: #149eca;
+    font-weight: 400;
+}
+header div:hover{
+    scale: 1.1;
+    cursor: pointer;
+    font-weight: 600;
+}
