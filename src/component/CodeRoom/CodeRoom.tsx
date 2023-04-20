@@ -31,6 +31,23 @@ const CodeRoom: React.FC = () => {
         }
     
     export default CodeRoom;`
+    const test = ["import SyntaxHighlighter from 'react-syntax-highlighter';", "    import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';", '    ', '    const CodeRoom: React.FC = () => {', '        let { topic } = useParams();', '    ', '        const roomDetails = data.find((room) => room.roomName === topic)', '    ', '          return (<>', '        }', '    ', '    export default CodeRoom;']
+    
+    console.log(`async function fetchData() {
+      try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+        if (!response.ok) {
+          throw new Error(\`HTTP error! Status: \${response.status}\`);
+        }
+        const data = await response.json();
+        console.log('Fetched data:', data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    
+    fetchData();
+    `.split("\n"))
         const [copy,setCopy] = useState<boolean>(false)
       return (
       <div id="room-container">
@@ -60,7 +77,7 @@ const CodeRoom: React.FC = () => {
           theme="vs-dark"
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
-          value={roomDetails?.value}
+          value={roomDetails?.value.join("\n")}
           />
           <div id="block-bottom"></div>
         </div>
