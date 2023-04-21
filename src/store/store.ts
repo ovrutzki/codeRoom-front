@@ -1,14 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import roomsReducer from "../store/slicer/room.slicer";
+import roomReducer from "../store/slicer/room.slicer";
 
 import { IRoom } from "./interface";
 
+export interface IRoomState{
+  value:IRoom[]
+  flag:boolean
+}
 export interface IRootState{
-    rooms:IRoom
+    room:IRoomState
 }
 
 export default configureStore({
     reducer: {
-      rooms:roomsReducer
+      room:roomReducer
     },
   });

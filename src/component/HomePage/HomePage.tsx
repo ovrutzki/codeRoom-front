@@ -1,22 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.css";
 import data from '../../rooms.json'
 import { useNavigate } from "react-router-dom";
 import GeneralButton from "../GeneralButton/GeneralButton";
 import { IRoom } from "../../store/interface";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchAllRooms } from "../../store/slicer/room.slicer";
+import { IRootState } from "../../store/store";
+import axios from "axios";
 
 
 const HomePage: React.FC = () => {
   const dispatch = useDispatch<any>()
   const navigate = useNavigate()
-  useEffect(()=>{
-    dispatch(fetchAllRooms())
-  })
-  const allRooms:IRoom[] = data
+  const [loading,setLoading] = useState<boolean>(false)
+  const [allRooms,setAllRoom] = useState<IRoom[]>([])
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get('http://localhost:8000/api/room');
+      setAllRoom(response.data)
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setLoading(false)
+    }
+  }
+   useEffect(()=>{
+     fetchData()
+   },[])
   return (
     <div id="container">
+      
+      {loading && <div className="loader"></div> }
       <div id="titles-div">
         <h1>Welcome to CodeRoom</h1>
         <h2>your home for learn code</h2>
