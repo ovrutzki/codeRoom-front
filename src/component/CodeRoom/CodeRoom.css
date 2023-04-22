@@ -18,6 +18,12 @@ body{
     border-bottom-right-radius:4px ;
     justify-self: center;
 }
+#upper-div{
+    display: flex;
+    justify-content: space-between;
+    width: 86vw;
+    padding:2vw 2vw;
+}
 
 #block-top{
     display: flex;

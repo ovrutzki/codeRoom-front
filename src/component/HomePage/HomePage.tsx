@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
         <h2>chose a room and get started</h2>
       <div id="rooms-div">
         {allRooms.map((room:IRoom,index:number) => 
-        <div key={index} className="room-box" onClick={() =>navigate(`room/${room.roomName}`)}>{room.roomName}</div>
+        <div key={index} className="room-box" onClick={() =>navigate(`room/${room.roomName}`)}>{room.roomName?.toUpperCase()}</div>
         )}
       </div>
       </div>
