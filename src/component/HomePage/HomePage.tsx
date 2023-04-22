@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllRooms } from "../../store/slicer/room.slicer";
 import { IRootState } from "../../store/store";
 import axios from "axios";
+import Header from "../Header/Header";
 
 
 const HomePage: React.FC = () => {
@@ -29,9 +30,9 @@ const HomePage: React.FC = () => {
    useEffect(()=>{
      fetchData()
    },[])
-  return (
+  return (<>
+      <Header />
     <div id="container">
-      
       {loading && <div className="loader"></div> }
       <div id="titles-div">
         <h1>Welcome to CodeRoom</h1>
@@ -44,7 +45,7 @@ const HomePage: React.FC = () => {
         )}
       </div>
       </div>
-  );
+      </>);
 };
 
 export default HomePage;
