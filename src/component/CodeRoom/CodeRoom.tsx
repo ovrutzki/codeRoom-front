@@ -18,13 +18,13 @@ const CodeRoom: React.FC = () => {
   const { topic } = useParams();
   const editorRef = useRef<any>();
   const roomData:any = useSelector((state:IRootState) => state.room.value)
-  const roomDetails = data.find((room) => room.roomName === topic);
-  const specificRoom:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
-  console.log("specificRoom",specificRoom);
+  // const roomDetails = data.find((room) => room.roomName === topic);
+  const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
+  // console.log("specificRoom",specificRoom);
   console.log("roomData",roomData);
   
-  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
-  // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails?.value);
+  // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
+  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails.value);
   const [userId,setUserId] = useState<string>()
   const [mentorId,setMentorId] = useState<string>()
   const [readOnlyMode,setReadOnlyMode] = useState<boolean>()
