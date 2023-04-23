@@ -16,12 +16,13 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate()
   const [loading,setLoading] = useState<boolean>(false)
   const [allRooms,setAllRoom] = useState<IRoom[]>([])
-   const fetchData = async () => {
+  const fetchData = async () => {
     setLoading(true)
     try {
       const response = await axios.get('https://eran-coderoom-backend.onrender.com/api/room');
       setAllRoom(response.data) 
       dispatch(getRoomsData(response.data))
+      sessionStorage.setItem('all-rooms',response.data)
     } catch (error) {
       console.log(error);
     }finally{
