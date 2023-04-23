@@ -10,8 +10,7 @@ import GeneralButton from "../GeneralButton/GeneralButton";
 import axios from "axios";
 import { IRootState } from "../../store/store";
 import { IRoom } from "../../store/interface";
-import { useSelector , useDispatch} from "react-redux";
-import { fetchAllRooms } from "../../store/slicer/room.slicer";
+
 
 
 
@@ -20,7 +19,7 @@ const CodeRoom: React.FC = () => {
   const editorRef = useRef<any>();
   const roomData:any = sessionStorage.getItem('all-rooms')
   console.log(roomData);
-  
+  const a = JSON.parse(roomData)
   const roomDetails:IRoom ={}
   // const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
   
