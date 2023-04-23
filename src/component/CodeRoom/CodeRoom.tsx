@@ -77,30 +77,21 @@ let test = 0
   }, [socket]);
 
   // sending the user code:
-  const handelTyping = () => {
-    setCodeToDisplay(editorRef.current.getValue().split('\n'))
-    setDefaultCode(["1"])
-    // socket.emit("user-typing", editorRef.current.getValue(), topic);
-  };
-
   // overload solution:
   let lastUpdate = 0
+  const handelTyping = () => {
+    setCodeToDisplay(editorRef.current.getValue().split('\n'))
 
-  useEffect(()=>{
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
-      setDefaultCode(["2"])
     }else {
       setTimeout(() => {
       socket.emit("user-typing", codeToDisplay, topic);
         lastUpdate = Date.now()
       }, 500-lastUpdate)
-      setDefaultCode(["2"])
     }
-    // return () => clearTimeout(sendData)
-  },[defaultCode])
+  };
 
-  
 
   //  getting others user code:
   socket.on("send-code", (code: any) => {
