@@ -81,14 +81,35 @@ let test = 0
     socket.emit("user-typing", editorRef.current.getValue(), topic);
   };
   // overload solution:
-  useEffect(()=>{
-    const sendData = setTimeout(() => {
-      // handelTyping()
-      socket.emit("user-typing", editorRef.current.getValue(), topic);
-    }, 500)
+  // useEffect(()=>{
+  //   const sendData = setTimeout(() => {
+  //     // handelTyping()
+  //     socket.emit("user-typing", editorRef.current.getValue(), topic);
+  //   }, 500)
 
-    return () => clearTimeout(sendData)
-  },[codeToDisplay])
+  //   return () => clearTimeout(sendData)
+  // },[codeToDisplay])
+
+  let lastEmitTime = 0;
+  const emitDelay = 500;
+
+  const handleChange = () => {
+    const value = editorRef.current.getValue().split('\n')
+    setCodeToDisplay(editorRef.current.getValue().split('\n'));
+
+    const now = Date.now();
+    const elapsed = now - lastEmitTime;
+
+    if (elapsed >= emitDelay) {
+      socket.emit("user-typing", value);
+      lastEmitTime = now;
+    } else {
+      setTimeout(() => {
+        socket.emit("user-typing", value);
+        lastEmitTime = Date.now();
+      }, emitDelay - elapsed);
+    }
+  };
 
   //  getting others user code:
   socket.on("send-code", (code: any) => {
@@ -181,8 +202,11 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={() => setCodeToDisplay(editorRef.current.getValue().split('\n'))}
+          onChange={() => handleChange}
+          // onChange={() => setCodeToDisplay(editorRef.current.getValue().split('\n'))}
           options={{readOnly: readOnlyMode}}
+          beforeMount = {() => console.log("before")
+          }
           
         />
         <div id="block-bottom"></div>
