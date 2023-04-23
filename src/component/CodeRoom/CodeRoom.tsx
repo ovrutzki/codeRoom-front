@@ -21,7 +21,7 @@ const CodeRoom: React.FC = () => {
   console.log(specificRoom);
   
   // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
-  // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails?.value);
+  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>([]);
   const [userId,setUserId] = useState<string>()
   const [mentorId,setMentorId] = useState<string>()
   const [readOnlyMode,setReadOnlyMode] = useState<boolean>()
