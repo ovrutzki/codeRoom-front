@@ -8,14 +8,18 @@ import Header from "../Header/Header";
 import { io } from "socket.io-client";
 import GeneralButton from "../GeneralButton/GeneralButton";
 import axios from "axios";
+import { IRootState } from "../../store/store";
+import { IRoom } from "../../store/interface";
 
 
 
 const CodeRoom: React.FC = () => {
   const { topic } = useParams();
   const editorRef = useRef<any>();
+  const roomData:any = useSelector((state:IRootState) => state.room.value)
+  const specificRoom:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
   const roomDetails = data.find((room) => room.roomName === topic);
-  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>([]);
+  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
   // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails?.value);
   const [userId,setUserId] = useState<string>()
   const [mentorId,setMentorId] = useState<string>()
@@ -65,9 +69,9 @@ let test = 0
       }
     })
   //  ===========================================
-    socket.on("send-code", (code: any) => {
-      setCodeToDisplay(code);
-    });
+    // socket.on("send-code", (code: any) => {
+    //   setCodeToDisplay(code);
+    // });
 
     return () => {
       socket.off("specific-room")
@@ -77,21 +81,29 @@ let test = 0
   }, [socket]);
 
   // sending the user code:
-  // overload solution:
-  let lastUpdate = 0
   const handelTyping = () => {
     setCodeToDisplay(editorRef.current.getValue().split('\n'))
+    // setDefaultCode(["1"])
+  };
 
+  // overload solution:
+  let lastUpdate = 0
+
+  useEffect(()=>{
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
+      // setDefaultCode(["2"])
     }else {
       setTimeout(() => {
       socket.emit("user-typing", codeToDisplay, topic);
         lastUpdate = Date.now()
       }, 500-lastUpdate)
+      // setDefaultCode(["2"])
     }
-  };
+    // return () => clearTimeout(sendData)
+  },[defaultCode])
 
+  
 
   //  getting others user code:
   socket.on("send-code", (code: any) => {
@@ -202,3 +214,7 @@ let test = 0
 };
 
 export default CodeRoom;
+function useSelector(arg0: (state: IRootState) => import("../../store/interface").IRoom[]) {
+  throw new Error("Function not implemented.");
+}
+
