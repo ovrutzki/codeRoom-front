@@ -123,7 +123,7 @@ let test = 0
     setReadOnlyMode(true)
   }
   socket.on('not-mentor',() =>{
-    setReadOnlyMode(false)
+    notMentorStatus()
   })
   useEffect(()=>{
     socket.connect()
