@@ -57,7 +57,6 @@ let test = 0
     socket.on("mentor-id", (mentorId:string)=>{
       setMentorId(mentorId)
       console.log('mentorId',mentorId);
-      console.log('address2: ',ipAddress);
 
       if (String(mentorId) === sessionStorage.getItem('ip-address')) {
         setReadOnlyMode(true)
@@ -81,35 +80,24 @@ let test = 0
     socket.emit("user-typing", editorRef.current.getValue(), topic);
   };
   // overload solution:
-  // useEffect(()=>{
-  //   const sendData = setTimeout(() => {
-  //     // handelTyping()
-  //     socket.emit("user-typing", editorRef.current.getValue(), topic);
-  //   }, 500)
+  let lastUpdate = 0
+  useEffect(()=>{
+    if(Date.now()-lastUpdate > 500){
+      socket.emit("user-typing", editorRef.current.getValue(), topic);
 
-  //   return () => clearTimeout(sendData)
-  // },[codeToDisplay])
+    }else {
+      const sendData = setTimeout(() => {
+      socket.emit("user-typing", editorRef.current.getValue(), topic);
+        lastUpdate = Date.now()
+      }, 500-lastUpdate)
 
-  let lastEmitTime = 0;
-  const emitDelay = 500;
-
-  const handleChange = () => {
-    const value = editorRef.current.getValue().split('\n')
-    setCodeToDisplay(editorRef.current.getValue().split('\n'));
-
-    const now = Date.now();
-    const elapsed = now - lastEmitTime;
-
-    if (elapsed >= emitDelay) {
-      socket.emit("user-typing", value, topic);
-      lastEmitTime = now;
-    } else {
-      setTimeout(() => {
-        socket.emit("user-typing", value, topic);
-        lastEmitTime = Date.now();
-      }, emitDelay - elapsed);
     }
-  };
+
+
+    // return () => clearTimeout(sendData)
+  },[codeToDisplay])
+
+  
 
   //  getting others user code:
   socket.on("send-code", (code: any) => {
@@ -202,11 +190,8 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={() => handleChange}
-          // onChange={() => setCodeToDisplay(editorRef.current.getValue().split('\n'))}
+          onChange={() => setCodeToDisplay(editorRef.current.getValue().split('\n'))}
           options={{readOnly: readOnlyMode}}
-          beforeMount = {() => console.log("before")
-          }
           
         />
         <div id="block-bottom"></div>
