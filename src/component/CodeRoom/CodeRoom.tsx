@@ -19,7 +19,10 @@ const CodeRoom: React.FC = () => {
   const { topic } = useParams();
   const editorRef = useRef<any>();
   const roomData:any = sessionStorage.getItem('all-rooms')
-  const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
+  console.log(roomData);
+  
+  const roomDetails:IRoom ={}
+  // const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
   
   const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails.value);
   const [userId,setUserId] = useState<string>()
