@@ -17,12 +17,9 @@ import { IRoom } from "../../store/interface";
 const CodeRoom: React.FC = () => {
   const { topic } = useParams();
   const editorRef = useRef<any>();
-  const roomData:any = sessionStorage.getItem('all-rooms')
-  console.log(roomData);
-  const a = JSON.parse(roomData)
-  console.log(a);
-  const roomDetails:IRoom ={}
-  // const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
+  const roomsData:any = sessionStorage.getItem('all-rooms')
+  const roomsObject = JSON.parse(roomsData)
+  const roomDetails:IRoom = roomsObject?.find((room:IRoom)=> room.roomName === topic)
   
   const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails.value);
   const [userId,setUserId] = useState<string>()
