@@ -84,7 +84,8 @@ let test = 0
   let lastUpdate = 0
   // sending the user code:
   const handelTyping = () => {
-    setCodeToDisplay(editorRef.current.getValue().split('\n'))
+    console.log(codeToDisplay);
+    
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
     }else {
@@ -199,7 +200,10 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={handelTyping}
+          onChange={()=>{
+            handelTyping
+            setCodeToDisplay(editorRef.current.getValue().split('\n'))
+          }}
           options={{readOnly: readOnlyMode}}
           
         />
