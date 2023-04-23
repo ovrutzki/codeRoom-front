@@ -64,7 +64,7 @@ let test = 0
         console.log(readOnlyMode);
       }
     })
-   
+  //  ===========================================
     socket.on("send-code", (code: any) => {
       setDefaultCode(code);
     });
@@ -102,9 +102,9 @@ let test = 0
   
 
   //  getting others user code:
-  socket.on("send-code", (code: any) => {
-    setCodeToDisplay(code);
-  });
+  // socket.on("send-code", (code: any) => {
+  //   setCodeToDisplay(code);
+  // });
 
   // window.addEventListener("unload", (event) => {
   //   socket.disconnect();
