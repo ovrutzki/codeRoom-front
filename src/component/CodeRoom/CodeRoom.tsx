@@ -77,11 +77,13 @@ let test = 0
 
   // sending the user code:
   const handelTyping = () => {
-    setCodeToDisplay(editorRef.current.getValue())
+    setCodeToDisplay(editorRef.current.getValue().split('\n'))
     // socket.emit("user-typing", editorRef.current.getValue(), topic);
   };
+
   // overload solution:
   let lastUpdate = 0
+
   useEffect(()=>{
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
