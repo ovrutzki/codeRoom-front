@@ -84,7 +84,7 @@ let test = 0
   useEffect(()=>{
     const sendData = setTimeout(() => {
       handelTyping()
-    }, 2000)
+    }, 1000)
 
     return () => clearTimeout(sendData)
   },[codeToDisplay])
