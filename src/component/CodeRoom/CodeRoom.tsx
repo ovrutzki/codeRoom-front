@@ -84,11 +84,11 @@ let test = 0
   let lastUpdate = 0
   useEffect(()=>{
     if(Date.now()-lastUpdate > 500){
-      socket.emit("user-typing", editorRef.current.getValue(), topic);
+      socket.emit("user-typing", codeToDisplay, topic);
 
     }else {
       setTimeout(() => {
-      socket.emit("user-typing", editorRef.current.getValue(), topic);
+      socket.emit("user-typing", codeToDisplay, topic);
         lastUpdate = Date.now()
       }, 500-lastUpdate)
 
