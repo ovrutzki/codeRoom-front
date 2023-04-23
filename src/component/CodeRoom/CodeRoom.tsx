@@ -83,8 +83,9 @@ let test = 0
   // overload solution:
   useEffect(()=>{
     const sendData = setTimeout(() => {
-      handelTyping()
-    }, 1000)
+      // handelTyping()
+      socket.emit("user-typing", editorRef.current.getValue(), topic);
+    }, 500)
 
     return () => clearTimeout(sendData)
   },[codeToDisplay])
