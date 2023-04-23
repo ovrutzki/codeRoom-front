@@ -10,6 +10,7 @@ import GeneralButton from "../GeneralButton/GeneralButton";
 import axios from "axios";
 import { IRootState } from "../../store/store";
 import { IRoom } from "../../store/interface";
+import { useSelector } from "react-redux";
 
 
 
@@ -213,8 +214,5 @@ let test = 0
   );
 };
 
-export default CodeRoom;
-function useSelector(arg0: (state: IRootState) => import("../../store/interface").IRoom[]) {
-  throw new Error("Function not implemented.");
-}
+
 
