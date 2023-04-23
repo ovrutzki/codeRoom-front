@@ -23,14 +23,13 @@ const CodeRoom: React.FC = () => {
   console.log("specificRoom",specificRoom);
   console.log("roomData",roomData);
   
-  // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
-  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails?.value);
+  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
+  // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails?.value);
   const [userId,setUserId] = useState<string>()
   const [mentorId,setMentorId] = useState<string>()
   const [readOnlyMode,setReadOnlyMode] = useState<boolean>()
   const [isSave,setIsSave] = useState<boolean>(false)
   const [ipAddress, setIpAddress] = useState<string>('')
-  const [defaultCode,setDefaultCode] = useState<string[]>()
 
   // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
@@ -50,9 +49,6 @@ let test = 0
   
   useEffect(() => {
     
-    // socket.on('connect', () => {
-    //   setUserId(socket.io.engine.id);
-    // });
     socket.on('ip-address', (ip) => {
      setIpAddress(ip);
      sessionStorage.setItem('ip-address', ip)
@@ -105,7 +101,7 @@ let test = 0
       // setDefaultCode(["2"])
     }
     // return () => clearTimeout(sendData)
-  },[defaultCode])
+  },[codeToDisplay])
 
   
 
