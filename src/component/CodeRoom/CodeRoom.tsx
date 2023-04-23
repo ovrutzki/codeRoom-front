@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import "./CodeRoom.css";
 import { useParams } from "react-router-dom";
-import data from "../../rooms.json";
 import "highlight.js/styles/github.css";
 import Editor from "@monaco-editor/react";
 import Header from "../Header/Header";
@@ -19,8 +18,9 @@ const CodeRoom: React.FC = () => {
   const editorRef = useRef<any>();
   const roomData:any = useSelector((state:IRootState) => state.room.value)
   const specificRoom:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
-  const roomDetails = data.find((room) => room.roomName === topic);
-  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
+  console.log(specificRoom);
+  
+  // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
   // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails?.value);
   const [userId,setUserId] = useState<string>()
   const [mentorId,setMentorId] = useState<string>()
