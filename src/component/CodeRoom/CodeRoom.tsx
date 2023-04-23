@@ -40,6 +40,7 @@ let test = 0
   );
   
   useEffect(() => {
+    
     // socket.on('connect', () => {
     //   setUserId(socket.io.engine.id);
     // });
@@ -121,6 +122,9 @@ let test = 0
     socket.emit('is-mentor')
     setReadOnlyMode(true)
   }
+  socket.on('not-mentor',() =>{
+    setReadOnlyMode(false)
+  })
   useEffect(()=>{
     socket.connect()
     
