@@ -48,7 +48,7 @@ let test = 0
   );
   
   useEffect(() => {
-    
+    // get the api and save in session storage:
     socket.on('ip-address', (ip) => {
      setIpAddress(ip);
      sessionStorage.setItem('ip-address', ip)
@@ -69,10 +69,6 @@ let test = 0
       }
     })
   //  ===========================================
-    // socket.on("send-code", (code: any) => {
-    //   setCodeToDisplay(code);
-    // });
-
     return () => {
       socket.off("specific-room")
       socket.off("send-code")
@@ -96,23 +92,12 @@ let test = 0
     }
   };
 
-  
 
-  // useEffect(()=>{
-   
-  //   // return () => clearTimeout(sendData)
-  // },[])
-
-  
 
   //  getting others user code:
   socket.on("send-code", (code: any) => {
     setCodeToDisplay(code);
   });
-
-  // window.addEventListener("unload", (event) => {
-  //   socket.disconnect();
-  // });
 
 
   const handelSave = () =>{
@@ -216,5 +201,5 @@ let test = 0
   );
 };
 
-export default CodeRoom
+export default CodeRoom;
 
