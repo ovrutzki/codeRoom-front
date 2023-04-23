@@ -10,11 +10,14 @@ import GeneralButton from "../GeneralButton/GeneralButton";
 import axios from "axios";
 import { IRootState } from "../../store/store";
 import { IRoom } from "../../store/interface";
-import { useSelector } from "react-redux";
+import { useSelector , useDispatch} from "react-redux";
+import { fetchAllRooms } from "../../store/slicer/room.slicer";
 
 
 
 const CodeRoom: React.FC = () => {
+  const dispatch = useDispatch<any>()
+  dispatch(fetchAllRooms())
   const { topic } = useParams();
   const editorRef = useRef<any>();
   const roomData:any = useSelector((state:IRootState) => state.room.value)
@@ -26,6 +29,7 @@ const CodeRoom: React.FC = () => {
   const [readOnlyMode,setReadOnlyMode] = useState<boolean>()
   const [isSave,setIsSave] = useState<boolean>(false)
   const [ipAddress, setIpAddress] = useState<string>('')
+
 
   // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
@@ -78,6 +82,7 @@ let test = 0
   const handelTyping =async () => {
     console.log(codeToDisplay);
      setCodeToDisplay(editorRef.current.getValue().split('\n'));
+     
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
       console.log("if");
@@ -184,7 +189,7 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={() => console.log(editorRef.current.getValue().split('\n'))}
+          onChange={handelTyping}
           // onChange={()=>{
           //   setTimeout(() => {
           //     handelTyping();
