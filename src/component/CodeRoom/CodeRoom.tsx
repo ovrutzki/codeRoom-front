@@ -190,7 +190,7 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={() => setCodeToDisplay(editorRef.current.getValue().split('\n'))}
+          onChange={() => setCodeToDisplay(editorRef.current.getValue())}
           options={{readOnly: readOnlyMode}}
           
         />
