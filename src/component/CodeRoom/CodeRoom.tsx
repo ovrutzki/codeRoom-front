@@ -186,8 +186,8 @@ let test = 0
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
           onChange={()=>{
-            handelTyping
-            setCodeToDisplay(editorRef.current.getValue().split('\n'))
+            handelTyping();
+            setCodeToDisplay(editorRef.current.getValue().split('\n'));
           }}
           options={{readOnly: readOnlyMode}}
           
