@@ -194,7 +194,6 @@ let test = 0
           //   }, 100);
           // }}
           options={{readOnly: readOnlyMode}}
-          
         />
         <div id="block-bottom"></div>
       </div>
