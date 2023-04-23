@@ -18,12 +18,8 @@ const CodeRoom: React.FC = () => {
   const { topic } = useParams();
   const editorRef = useRef<any>();
   const roomData:any = useSelector((state:IRootState) => state.room.value)
-  // const roomDetails = data.find((room) => room.roomName === topic);
   const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
-  // console.log("specificRoom",specificRoom);
-  console.log("roomData",roomData);
   
-  // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
   const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails.value);
   const [userId,setUserId] = useState<string>()
   const [mentorId,setMentorId] = useState<string>()
@@ -189,8 +185,10 @@ let test = 0
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
           onChange={()=>{
-            handelTyping();
-            setCodeToDisplay(editorRef.current.getValue().split('\n'));
+            setTimeout(() => {
+              handelTyping();
+              setCodeToDisplay(editorRef.current.getValue().split('\n'));
+            }, 100);
           }}
           options={{readOnly: readOnlyMode}}
           
