@@ -82,12 +82,13 @@ let test = 0
   // overload solution:
   let lastUpdate = 0
   useEffect(()=>{
+    setCodeToDisplay(editorRef.current.getValue())
     if(Date.now()-lastUpdate > 500){
-      socket.emit("user-typing", editorRef.current.getValue(), topic);
+      socket.emit("user-typing", codeToDisplay, topic);
 
     }else {
       const sendData = setTimeout(() => {
-      socket.emit("user-typing", editorRef.current.getValue(), topic);
+      socket.emit("user-typing", codeToDisplay, topic);
         lastUpdate = Date.now()
       }, 500-lastUpdate)
 
