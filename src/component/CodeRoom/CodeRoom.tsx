@@ -82,7 +82,6 @@ let test = 0
   // overload solution:
   let lastUpdate = 0
   useEffect(()=>{
-    setCodeToDisplay(editorRef.current.getValue())
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
 
