@@ -9,6 +9,7 @@ body{
 #room-container{
     display: grid;
     flex-direction: column;
+    padding: 2vw;
 }
 #code-div{
     display: flex;
@@ -21,10 +22,19 @@ body{
 #upper-div{
     display: flex;
     justify-content: space-between;
-    width: 86vw;
-    padding:2vw 2vw;
+    width: 90vw;
+    padding:2vw 0vw;
 }
+#upper-div p{
+    color: rgb(153, 152, 152);
+    font-size: 16px;
 
+}
+#downer-div{
+    display: flex;
+    justify-content: center;
+    padding-top: 4vw;
+}
 #block-top{
     display: flex;
     justify-content: space-between;

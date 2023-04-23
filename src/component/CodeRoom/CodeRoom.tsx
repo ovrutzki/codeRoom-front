@@ -123,7 +123,7 @@ let test = 0
     setReadOnlyMode(true)
   }
   socket.on('not-mentor',() =>{
-    notMentorStatus()
+    setReadOnlyMode(false)
   })
   useEffect(()=>{
     socket.connect()
@@ -140,7 +140,9 @@ let test = 0
       <h1>{topic}</h1>
       <div id="code-div">
         <div id="upper-div">
-        {readOnlyMode ? <h2>read only</h2> : <h2>edit mode</h2>}
+        {readOnlyMode ? <div><h2>read only</h2><p>MENTOR</p></div> : <div><h2>edit mode</h2><p>STUDENT</p></div>}
+        {readOnlyMode ? <GeneralButton function={notMentorStatus} text={"I`m NOT a mentor"} bgcolor={"#5DE2A4"} textColor={"#303641"} /> :
+      <GeneralButton function={mentorStatus} text={"I`m a mentor"} bgcolor={"#46c087"} textColor={"#303641"} />}
         {!isSave ?  <GeneralButton function={handelSave} text={"save code"} bgcolor={"#5DE2A4"} textColor={"#303641"} /> :  <GeneralButton text={"Saved!"} bgcolor={"#5DE2A4"} textColor={"#303641"} />}
         </div>
         <button></button>
@@ -176,8 +178,9 @@ let test = 0
         />
         <div id="block-bottom"></div>
       </div>
-      {readOnlyMode ? <GeneralButton function={notMentorStatus} text={"I`m NOT a mentor"} bgcolor={"#5DE2A4"} textColor={"#303641"} /> :
-      <GeneralButton function={mentorStatus} text={"I`m a mentor"} bgcolor={"#46c087"} textColor={"#303641"} />}
+      <div id="downer-div">
+      
+      </div>    
     </div>
   );
 };
