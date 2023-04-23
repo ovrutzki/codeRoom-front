@@ -7,9 +7,14 @@
     gap: 8vw;
 }
 
-#titles-div h1{
+#titles-div{
+    display: flex;
+    flex-direction: column;
+    gap: 3vw;
 }
 #titles-div h2{
+    font-size: 45px;
+    font-weight: 500;
 }
 #rooms-div{
     display: flex;
@@ -28,7 +33,7 @@
     font-size: 4vw;
 }
 .room-box:hover{
-    background-color:  #1081a6;
+    background-color:  #27add9;
     font-weight: bold;
     scale: 1.1;
 }
@@ -36,7 +41,7 @@
 .loader {
     border: 16px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 16px solid #3498db;
+    border-top: 16px solid #2dafda;
     width: 120px;
     height: 120px;
     -webkit-animation: spin 2s linear infinite; /* Safari */
@@ -47,3 +52,53 @@
     100% { transform: rotate(360deg); }
   }
 
+  .wrapper{
+    box-sizing: content-box;
+    background-color: white;
+    height: 70px;
+    padding: 50px 30px;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 20px 25px rgba(255, 255, 255, 0.2);
+  }
+
+  .words{
+   overflow: hidden;
+   
+  }
+   span{
+    display: block;
+    font-size: 45px;
+    font-weight: 500;
+    font-family: 'Poppins',sans-serif;
+    height: 100%;
+    padding-left:8px;
+    animation: spin_words 6s infinite;
+    color: #303641;
+   }
+  @keyframes spin_words {
+    10%{
+        transform:translateY(-102%)
+    }
+    25%{
+        transform:translateY(-90%)
+    }
+    35%{
+        transform:translateY(-202%)
+    }
+    50%{
+        transform:translateY(-190%)
+    }
+    60%{
+        transform:translateY(-302%)
+    }
+    75%{
+        transform:translateY(-290%)
+    }
+    85%{
+        transform:translateY(-402%)
+    }
+    100%{
+        transform:translateY(-390%)
+    }
+  }

@@ -36,7 +36,16 @@ const HomePage: React.FC = () => {
       {loading && <div className="loader"></div> }
       <div id="titles-div">
         <h1>Welcome to CodeRoom</h1>
-        <h2>your home for learn code</h2>
+        <div className="wrapper">
+        <h2>Your home for </h2>
+        <div className="words">
+          <span>learning</span>
+          <span>share</span>
+          <span>code</span>
+          <span>teaching</span>
+          <span>learning</span>
+        </div>
+        </div>
       </div>
         <h2>chose a room and get started</h2>
       <div id="rooms-div">
