@@ -4,7 +4,7 @@ import { stat } from 'fs';
 
 export const fetchAllRooms = createAsyncThunk(
     'rooms/fetch', async () =>{
-        const response = await axios.get('http://localhost:8000/api/room');
+        const response = await axios.get('https://eran-coderoom-backend.onrender.com/api/room');
         return response.data
     }
 )

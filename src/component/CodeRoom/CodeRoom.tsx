@@ -35,7 +35,7 @@ const CodeRoom: React.FC = () => {
 let test = 0
   // socket
   const socket = useMemo(
-    () => io("http://localhost:8000", { query: { roomTopic: topic } }),
+    () => io("https://efta-back.onrender.com", { query: { roomTopic: topic } }),
     [topic]
   );
   
@@ -96,7 +96,7 @@ let test = 0
     const sendCodeToDb = async (code:string) => {
       const codeSplit = code.split('\n')
       try {
-        const sendCode = await axios.post('http://localhost:8000/api/room/saveCode',{
+        const sendCode = await axios.post('https://efta-back.onrender.com/api/room/saveCode',{
           roomCode: codeSplit,
           roomName:topic
         },

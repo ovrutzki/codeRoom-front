@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const response = await axios.get('http://localhost:8000/api/room');
+      const response = await axios.get('https://efta-back.onrender.com/api/room');
       setAllRoom(response.data)
     } catch (error) {
       console.log(error);
