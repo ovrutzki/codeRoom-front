@@ -76,11 +76,19 @@ let test = 0
    
   }, [socket]);
 
-
   // sending the user code:
   const handelTyping = () => {
     socket.emit("user-typing", editorRef.current.getValue(), topic);
   };
+  // overload solution:
+  useEffect(()=>{
+    const sendData = setTimeout(() => {
+      handelTyping()
+    }, 2000)
+
+    return () => clearTimeout(sendData)
+  },[codeToDisplay])
+
   //  getting others user code:
   socket.on("send-code", (code: any) => {
     setCodeToDisplay(code);
@@ -172,7 +180,7 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={() => handelTyping()}
+          onChange={() => setCodeToDisplay(editorRef.current.getValue().split('\n'))}
           options={{readOnly: readOnlyMode}}
           
         />
