@@ -77,23 +77,22 @@ let test = 0
 
   // sending the user code:
   const handelTyping = () => {
-    socket.emit("user-typing", editorRef.current.getValue(), topic);
+    setCodeToDisplay(editorRef.current.getValue())
+    // socket.emit("user-typing", editorRef.current.getValue(), topic);
   };
   // overload solution:
   let lastUpdate = 0
   useEffect(()=>{
     if(Date.now()-lastUpdate > 500){
-      socket.emit("user-typing", codeToDisplay, topic);
+      socket.emit("user-typing", editorRef.current.getValue(), topic);
 
     }else {
-      const sendData = setTimeout(() => {
-      socket.emit("user-typing", codeToDisplay, topic);
+      setTimeout(() => {
+      socket.emit("user-typing", editorRef.current.getValue(), topic);
         lastUpdate = Date.now()
       }, 500-lastUpdate)
 
     }
-
-
     // return () => clearTimeout(sendData)
   },[codeToDisplay])
 
@@ -143,15 +142,19 @@ let test = 0
   socket.on('not-mentor',() =>{
     setReadOnlyMode(false)
   })
+
+  // cleanup function
+
   useEffect(()=>{
     socket.connect()
-    
+  
     return () => {  
       console.log('disconnect');
       
       socket.disconnect();
     };
   },[])
+
   return (
     <div id="room-container">
       <Header />
@@ -190,7 +193,7 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={() => setCodeToDisplay(editorRef.current.getValue())}
+          onChange={handelTyping}
           options={{readOnly: readOnlyMode}}
           
         />
