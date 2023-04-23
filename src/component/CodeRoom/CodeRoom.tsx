@@ -3,12 +3,13 @@ import "./CodeRoom.css";
 import { useParams } from "react-router-dom";
 import data from "../../rooms.json";
 import "highlight.js/styles/github.css";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Editor from "@monaco-editor/react";
 import Header from "../Header/Header";
 import { io } from "socket.io-client";
 import GeneralButton from "../GeneralButton/GeneralButton";
+import axios from "axios";
+
+
 
 const CodeRoom: React.FC = () => {
   const { topic } = useParams();
@@ -20,7 +21,9 @@ const CodeRoom: React.FC = () => {
   const [mentorId,setMentorId] = useState<string>()
   const [readOnlyMode,setReadOnlyMode] = useState<boolean>()
   const [isSave,setIsSave] = useState<boolean>(false)
+  const [ipAddress, setIpAddress] = useState<string>('')
 
+  // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
   };
@@ -29,7 +32,7 @@ const CodeRoom: React.FC = () => {
     return editorRef.current.getValue();
   };
   const [copy, setCopy] = useState<boolean>(false);
-
+let test = 0
   // socket
   const socket = useMemo(
     () => io("http://localhost:8000", { query: { roomTopic: topic } }),
@@ -37,41 +40,40 @@ const CodeRoom: React.FC = () => {
   );
   
   useEffect(() => {
-    setUserId(socket.id);
-    socket.on('connect', () => {
-      console.log("user", socket.id);
+    // socket.on('connect', () => {
+    //   setUserId(socket.io.engine.id);
+    // });
+    socket.on('ip-address', (ip) => {
+     setIpAddress(ip);
+     sessionStorage.setItem('ip-address', ip)
+     console.log('address: ',ipAddress);
+     console.log("ip",ip);
+     
     });
-    
     
     // join to specific room:
     socket.emit("specific-room", topic);
     socket.on("mentor-id", (mentorId:string)=>{
-      console.log("mentorId", mentorId);
-      console.log("user", socket.id);
       setMentorId(mentorId)
+      console.log('mentorId',mentorId);
+      console.log('address2: ',ipAddress);
+
+      if (String(mentorId) === sessionStorage.getItem('ip-address')) {
+        setReadOnlyMode(true)
+        console.log(readOnlyMode);
+      }
     })
-    if(userId === mentorId){
-      setReadOnlyMode(true)
-      console.log(readOnlyMode);
-    } else {
-      setReadOnlyMode(false)
-      console.log('else',readOnlyMode);
-      
-    }
-    
+   
     socket.on("send-code", (code: any) => {
       setCodeToDisplay(code);
     });
-    
-    console.log('after',readOnlyMode);
-    
-    
+
     return () => {
       socket.off("specific-room")
       socket.off("send-code")
     };
    
-  }, [socket,mentorId]);
+  }, [socket]);
 
 
   // sending the user code:
@@ -83,25 +85,51 @@ const CodeRoom: React.FC = () => {
     setCodeToDisplay(code);
   });
 
-  window.addEventListener("unload", (event) => {
-    socket.disconnect();
-  });
+  // window.addEventListener("unload", (event) => {
+  //   socket.disconnect();
+  // });
 
-  useEffect(()=>{
-    socket.connect()
-    return () => {  
-      socket.disconnect();
-    };
-  },[])
 
   const handelSave = () =>{
     setIsSave(true)
 // api request to save the code:
-
-
-
+    const sendCodeToDb = async (code:string) => {
+      const codeSplit = code.split('\n')
+      try {
+        const sendCode = await axios.post('http://localhost:8000/api/room/saveCode',{
+          roomCode: codeSplit,
+          roomName:topic
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    sendCodeToDb(editorRef.current.getValue())
     setTimeout(function() {setIsSave(false)},3000)
   }
+
+  const notMentorStatus = ()=> {
+    socket.emit('not-mentor')
+    setReadOnlyMode(false)
+  }
+  const mentorStatus = ()=> {
+    socket.emit('is-mentor')
+    setReadOnlyMode(true)
+  }
+  useEffect(()=>{
+    socket.connect()
+    
+    return () => {  
+      console.log('disconnect');
+      
+      socket.disconnect();
+    };
+  },[])
   return (
     <div id="room-container">
       <Header />
@@ -144,6 +172,8 @@ const CodeRoom: React.FC = () => {
         />
         <div id="block-bottom"></div>
       </div>
+      {readOnlyMode ? <GeneralButton function={notMentorStatus} text={"I`m NOT a mentor"} bgcolor={"#5DE2A4"} textColor={"#303641"} /> :
+      <GeneralButton function={mentorStatus} text={"I`m a mentor"} bgcolor={"#46c087"} textColor={"#303641"} />}
     </div>
   );
 };
