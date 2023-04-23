@@ -101,11 +101,11 @@ let test = 0
     const elapsed = now - lastEmitTime;
 
     if (elapsed >= emitDelay) {
-      socket.emit("user-typing", value);
+      socket.emit("user-typing", value, topic);
       lastEmitTime = now;
     } else {
       setTimeout(() => {
-        socket.emit("user-typing", value);
+        socket.emit("user-typing", value, topic);
         lastEmitTime = Date.now();
       }, emitDelay - elapsed);
     }
