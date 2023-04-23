@@ -22,6 +22,7 @@ const CodeRoom: React.FC = () => {
   const [readOnlyMode,setReadOnlyMode] = useState<boolean>()
   const [isSave,setIsSave] = useState<boolean>(false)
   const [ipAddress, setIpAddress] = useState<string>('')
+  const [defaultCode,setDefaultCode] = useState<string[]>()
 
   // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
@@ -65,7 +66,7 @@ let test = 0
     })
    
     socket.on("send-code", (code: any) => {
-      setCodeToDisplay(code);
+      setDefaultCode(code);
     });
 
     return () => {
@@ -194,6 +195,7 @@ let test = 0
           theme="vs-dark"
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
+          defaultValue={defaultCode?.join('\n')}
           value={codeToDisplay?.join("\n")}
           onChange={handelTyping}
           options={{readOnly: readOnlyMode}}
