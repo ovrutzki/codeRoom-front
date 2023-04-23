@@ -66,7 +66,7 @@ let test = 0
     })
   //  ===========================================
     socket.on("send-code", (code: any) => {
-      setDefaultCode(code);
+      setCodeToDisplay(code);
     });
 
     return () => {
@@ -79,6 +79,7 @@ let test = 0
   // sending the user code:
   const handelTyping = () => {
     setCodeToDisplay(editorRef.current.getValue().split('\n'))
+    setDefaultCode(["1"])
     // socket.emit("user-typing", editorRef.current.getValue(), topic);
   };
 
@@ -88,23 +89,23 @@ let test = 0
   useEffect(()=>{
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
-
+      setDefaultCode(["2"])
     }else {
       setTimeout(() => {
       socket.emit("user-typing", codeToDisplay, topic);
         lastUpdate = Date.now()
       }, 500-lastUpdate)
-
+      setDefaultCode(["2"])
     }
     // return () => clearTimeout(sendData)
-  },[codeToDisplay])
+  },[defaultCode])
 
   
 
   //  getting others user code:
-  // socket.on("send-code", (code: any) => {
-  //   setCodeToDisplay(code);
-  // });
+  socket.on("send-code", (code: any) => {
+    setCodeToDisplay(code);
+  });
 
   // window.addEventListener("unload", (event) => {
   //   socket.disconnect();
@@ -195,7 +196,6 @@ let test = 0
           theme="vs-dark"
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
-          defaultValue={defaultCode?.join('\n')}
           value={codeToDisplay?.join("\n")}
           onChange={handelTyping}
           options={{readOnly: readOnlyMode}}
