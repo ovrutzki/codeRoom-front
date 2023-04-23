@@ -66,7 +66,7 @@
    overflow: hidden;
    
   }
-   span{
+  .words span{
     display: block;
     font-size: 45px;
     font-weight: 500;
