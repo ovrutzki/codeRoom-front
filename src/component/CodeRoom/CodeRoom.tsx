@@ -18,7 +18,7 @@ import { fetchAllRooms } from "../../store/slicer/room.slicer";
 const CodeRoom: React.FC = () => {
   const { topic } = useParams();
   const editorRef = useRef<any>();
-  const roomData:any = JSON.parse(sessionStorage.getItem('all-rooms'))
+  const roomData:any = sessionStorage.getItem('all-rooms')
   const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
   
   const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails.value);
