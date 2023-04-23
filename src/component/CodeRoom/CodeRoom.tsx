@@ -84,7 +84,10 @@ let test = 0
     
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
+      console.log("if");
+      
     }else {
+      console.log("else");
       setTimeout(() => {
       socket.emit("user-typing", codeToDisplay, topic);
         lastUpdate = Date.now()
