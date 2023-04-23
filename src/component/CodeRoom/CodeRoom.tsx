@@ -75,9 +75,9 @@ let test = 0
   // overload solution:
   let lastUpdate = 0
   // sending the user code:
-  const handelTyping = () => {
+  const handelTyping =async () => {
     console.log(codeToDisplay);
-    
+     setCodeToDisplay(editorRef.current.getValue().split('\n'));
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
       console.log("if");
@@ -184,12 +184,15 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={()=>{
-            setTimeout(() => {
-              handelTyping();
-              setCodeToDisplay(editorRef.current.getValue().split('\n'));
-            }, 100);
-          }}
+          onChange={() => console.log(editorRef.current.getValue().split('\n'))}
+          // onChange={()=>{
+          //   setTimeout(() => {
+          //     handelTyping();
+          //     setCodeToDisplay(editorRef.current.getValue().split('\n'));
+          //     console.log(codeToDisplay);
+              
+          //   }, 100);
+          // }}
           options={{readOnly: readOnlyMode}}
           
         />
