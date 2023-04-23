@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
       const response = await axios.get('https://eran-coderoom-backend.onrender.com/api/room');
       setAllRoom(response.data) 
       dispatch(getRoomsData(response.data))
-      sessionStorage.setItem('all-rooms',response.data)
+      sessionStorage.setItem('all-rooms',JSON.stringify(response.data))
     } catch (error) {
       console.log(error);
     }finally{
