@@ -17,8 +17,8 @@ export const roomSlicer = createSlice({
         flag:false
     },
     reducers: {
-        handelFlag: (state) => {
-            state.flag = !state.flag
+        getRoomsData: (state,action) => {
+            state.value = action.payload
 
         }
     },
@@ -27,8 +27,6 @@ export const roomSlicer = createSlice({
             console.log(action.payload);
             state.value = action.payload
             console.log("fulfilled");
-            state.flag = !state.flag
-
             
         });
         builder.addCase(fetchAllRooms.pending,(state,action)=>{
@@ -42,5 +40,5 @@ export const roomSlicer = createSlice({
     }
 })
 
-export const { handelFlag } = roomSlicer.actions;
+export const { getRoomsData } = roomSlicer.actions;
 export default roomSlicer.reducer;

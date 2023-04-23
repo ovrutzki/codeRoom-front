@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GeneralButton from "../GeneralButton/GeneralButton";
 import { IRoom } from "../../store/interface";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllRooms } from "../../store/slicer/room.slicer";
+import { fetchAllRooms, getRoomsData } from "../../store/slicer/room.slicer";
 import { IRootState } from "../../store/store";
 import axios from "axios";
 import Header from "../Header/Header";
@@ -20,7 +20,8 @@ const HomePage: React.FC = () => {
     setLoading(true)
     try {
       const response = await axios.get('https://eran-coderoom-backend.onrender.com/api/room');
-      setAllRoom(response.data)
+      setAllRoom(response.data) 
+      dispatch(getRoomsData(response.data))
     } catch (error) {
       console.log(error);
     }finally{

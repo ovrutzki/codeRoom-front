@@ -20,7 +20,8 @@ const CodeRoom: React.FC = () => {
   const roomData:any = useSelector((state:IRootState) => state.room.value)
   const roomDetails = data.find((room) => room.roomName === topic);
   const specificRoom:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
-  console.log(specificRoom);
+  console.log("specificRoom",specificRoom);
+  console.log("roomData",roomData);
   
   // const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(specificRoom.value);
   const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails?.value);
