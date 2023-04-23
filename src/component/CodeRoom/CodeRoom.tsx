@@ -20,6 +20,7 @@ const CodeRoom: React.FC = () => {
   const roomData:any = sessionStorage.getItem('all-rooms')
   console.log(roomData);
   const a = JSON.parse(roomData)
+  console.log(a);
   const roomDetails:IRoom ={}
   // const roomDetails:IRoom = roomData?.find((room:IRoom)=> room.roomName === topic)
   
