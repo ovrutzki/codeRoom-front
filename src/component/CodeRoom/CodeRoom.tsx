@@ -11,23 +11,23 @@ import axios from "axios";
 import { IRootState } from "../../store/store";
 import { IRoom } from "../../store/interface";
 
-
-
-
 const CodeRoom: React.FC = () => {
   const { topic } = useParams();
   const editorRef = useRef<any>();
-  const roomsData:any = sessionStorage.getItem('all-rooms')
-  const roomsObject = JSON.parse(roomsData)
-  const roomDetails:IRoom = roomsObject?.find((room:IRoom)=> room.roomName === topic)
-  
-  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(roomDetails.value);
-  const [userId,setUserId] = useState<string>()
-  const [mentorId,setMentorId] = useState<string>()
-  const [readOnlyMode,setReadOnlyMode] = useState<boolean>()
-  const [isSave,setIsSave] = useState<boolean>(false)
-  const [ipAddress, setIpAddress] = useState<string>('')
+  const roomsData: any = sessionStorage.getItem("all-rooms");
+  const roomsObject = JSON.parse(roomsData);
+  const roomDetails: IRoom = roomsObject?.find(
+    (room: IRoom) => room.roomName === topic
+  );
 
+  const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(
+    roomDetails.value
+  );
+  const [userId, setUserId] = useState<string>();
+  const [mentorId, setMentorId] = useState<string>();
+  const [readOnlyMode, setReadOnlyMode] = useState<boolean>();
+  const [isSave, setIsSave] = useState<boolean>(false);
+  const [ipAddress, setIpAddress] = useState<string>("");
 
   // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
@@ -38,112 +38,120 @@ const CodeRoom: React.FC = () => {
     return editorRef.current.getValue();
   };
   const [copy, setCopy] = useState<boolean>(false);
-let test = 0
+  let test = 0;
   // socket
   const socket = useMemo(
-    () => io("https://eran-coderoom-backend.onrender.com", { query: { roomTopic: topic } }),
+    () =>
+      io("https://eran-coderoom-backend.onrender.com", {
+        query: { roomTopic: topic },
+      }),
     [topic]
   );
-  
+
   useEffect(() => {
     // get the api and save in session storage:
-    socket.on('ip-address', (ip) => {
-     setIpAddress(ip);
-     sessionStorage.setItem('ip-address', ip)     
+    socket.on("ip-address", (ip) => {
+      setIpAddress(ip);
+      sessionStorage.setItem("ip-address", ip);
     });
-    
+
     // join to specific room:
     socket.emit("specific-room", topic);
-    socket.on("mentor-id", (mentorId:string)=>{
-      setMentorId(mentorId)
-      console.log('mentorId',mentorId);
+    socket.on("mentor-id", (mentorId: string) => {
+      setMentorId(mentorId);
+      console.log("mentorId", mentorId);
 
-      if (String(mentorId) === sessionStorage.getItem('ip-address')) {
-        setReadOnlyMode(true)
+      if (String(mentorId) === sessionStorage.getItem("ip-address")) {
+        setReadOnlyMode(true);
       }
-    })
-  //  ===========================================
+    });
+    //  ===========================================
     return () => {
-      socket.off("specific-room")
-      socket.off("send-code")
+      socket.off("specific-room");
+      socket.off("send-code");
     };
-   
   }, [socket]);
 
   // overload solution:
-  let lastUpdate = 0
+  let lastUpdate = 0;
   // sending the user code:
   const handelTyping = () => {
-    console.log('111111111',codeToDisplay);
-    setCodeToDisplay(editorRef.current.getValue().split('\n'));
-     
-    if(Date.now()-lastUpdate > 500){
-      socket.emit("user-typing", (editorRef.current.getValue().split('\n')), topic);
+    setCodeToDisplay(editorRef.current.getValue().split("\n"));
+
+    if (Date.now() - lastUpdate > 300) {
+      socket.emit(
+        "user-typing",
+        editorRef.current.getValue().split("\n"),
+        topic
+      );
       console.log("if");
-      lastUpdate = Date.now()
-    }else {
-      console.log("else");
+    } else {
+      console.log("else",(Date.now() - lastUpdate));
       setTimeout(() => {
-      socket.emit("user-typing", codeToDisplay, topic);
-        lastUpdate = Date.now()
-      }, 500-lastUpdate)
+        socket.emit(
+          "user-typing",
+          editorRef.current.getValue().split("\n"),topic);
+      }, 700 - (Date.now() - lastUpdate));
     }
+    lastUpdate = Date.now();
   };
-
-
 
   //  getting others user code:
   socket.on("send-code", (code: any) => {
     setCodeToDisplay(code);
   });
 
-
-  const handelSave = () =>{
-    setIsSave(true)
-// api request to save the code:
-    const sendCodeToDb = async (code:string) => {
-      const codeSplit = code.split('\n')
+  const handelSave = () => {
+    setIsSave(true);
+    // api request to save the code:
+    const sendCodeToDb = async (code: string) => {
+      const codeSplit = code.split("\n");
       try {
-        const sendCode = await axios.post('https://eran-coderoom-backend.onrender.com/api/room/saveCode',{
-          roomCode: codeSplit,
-          roomName:topic
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+        const sendCode = await axios.post(
+          "https://eran-coderoom-backend.onrender.com/api/room/saveCode",
+          {
+            roomCode: codeSplit,
+            roomName: topic,
           },
-        })
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
       } catch (error) {
         console.log(error);
       }
-    }
-    sendCodeToDb(editorRef.current.getValue())
-    setTimeout(function() {setIsSave(false)},3000)
-  }
+    };
+    sendCodeToDb(editorRef.current.getValue());
+    setTimeout(function () {
+      setIsSave(false);
+    }, 3000);
+  };
 
-  const notMentorStatus = ()=> {
-    socket.emit('not-mentor')
-    setReadOnlyMode(false)
-  }
-  const mentorStatus = ()=> {
-    socket.emit('is-mentor')
-    setReadOnlyMode(true)
-  }
-  socket.on('not-mentor',() =>{
-    setReadOnlyMode(false)
-  })
+  const notMentorStatus = () => {
+    socket.emit("not-mentor");
+    setReadOnlyMode(false);
+  };
+  const mentorStatus = () => {
+    socket.emit("is-mentor");
+    setReadOnlyMode(true);
+  };
+  socket.on("not-mentor", () => {
+    setReadOnlyMode(false);
+  });
 
   // cleanup function
 
-  useEffect(()=>{
-    socket.connect()
-  
-    return () => {  
-      console.log('disconnect');
-      
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      console.log("disconnect");
+
       socket.disconnect();
     };
-  },[])
+  }, []);
 
   return (
     <div id="room-container">
@@ -151,30 +159,64 @@ let test = 0
       <h1>{topic}</h1>
       <div id="code-div">
         <div id="upper-div">
-        {readOnlyMode ? <div><h2>read only</h2><p>MENTOR</p></div> : <div><h2>edit mode</h2><p>STUDENT</p></div>}
-        {readOnlyMode ? <GeneralButton function={notMentorStatus} text={"I`m NOT a mentor"} bgcolor={"#5DE2A4"} textColor={"#303641"} /> :
-      <GeneralButton function={mentorStatus} text={"I`m a mentor"} bgcolor={"#46c087"} textColor={"#303641"} />}
-        {!isSave ?  <GeneralButton function={handelSave} text={"save code"} bgcolor={"#5DE2A4"} textColor={"#303641"} /> :  <GeneralButton text={"Saved!"} bgcolor={"#5DE2A4"} textColor={"#303641"} />}
+          {readOnlyMode ? (
+            <div>
+              <h2>read only</h2>
+              <p>MENTOR</p>
+            </div>
+          ) : (
+            <div>
+              <h2>edit mode</h2>
+              <p>STUDENT</p>
+            </div>
+          )}
+          {readOnlyMode ? (
+            <GeneralButton
+              function={notMentorStatus}
+              text={"I`m NOT a mentor"}
+              bgcolor={"#5DE2A4"}
+              textColor={"#303641"}
+            />
+          ) : (
+            <GeneralButton
+              function={mentorStatus}
+              text={"I`m a mentor"}
+              bgcolor={"#46c087"}
+              textColor={"#303641"}
+            />
+          )}
+          {!isSave ? (
+            <GeneralButton
+              function={handelSave}
+              text={"save code"}
+              bgcolor={"#5DE2A4"}
+              textColor={"#303641"}
+            />
+          ) : (
+            <GeneralButton
+              text={"Saved!"}
+              bgcolor={"#5DE2A4"}
+              textColor={"#303641"}
+            />
+          )}
         </div>
         <button></button>
-          <div id="block-top">
-            <p>{roomDetails?.language}</p>
-            <button
-              id="copy-btn"
-              onClick={() => {setCopy(true);
-                navigator.clipboard.writeText(getEditorValue());
-                setInterval(() => {
-                  setCopy(false);
-                }, 3000);
-              }}
-            >
-              {!copy ? ("Copy Code "
-              ) : (
-          "Copied!"
-        )}
-            </button>
-          </div>
-        
+        <div id="block-top">
+          <p>{roomDetails?.language}</p>
+          <button
+            id="copy-btn"
+            onClick={() => {
+              setCopy(true);
+              navigator.clipboard.writeText(getEditorValue());
+              setInterval(() => {
+                setCopy(false);
+              }, 3000);
+            }}
+          >
+            {!copy ? "Copy Code " : "Copied!"}
+          </button>
+        </div>
+
         <Editor
           min-height="fit-content"
           height="40vw"
@@ -184,24 +226,19 @@ let test = 0
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
           // onChange={() =>handelTyping}
-          onChange={()=>{
-            console.log('2',editorRef.current.getValue().split('\n'));
+          onChange={() => {
             setTimeout(() => {
               handelTyping();
-              setCodeToDisplay(editorRef.current.getValue().split('\n'));
-              
+              setCodeToDisplay(editorRef.current.getValue().split("\n"));
             }, 200);
           }}
-          options={{readOnly: readOnlyMode}}
+          options={{ readOnly: readOnlyMode }}
         />
         <div id="block-bottom"></div>
       </div>
-      <div id="downer-div">
-      
-      </div>    
+      <div id="downer-div"></div>
     </div>
   );
 };
 
 export default CodeRoom;
-
