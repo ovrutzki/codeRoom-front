@@ -227,10 +227,8 @@ const CodeRoom: React.FC = () => {
           value={codeToDisplay?.join("\n")}
           // onChange={() =>handelTyping}
           onChange={() => {
-            setTimeout(() => {
               handelTyping();
               setCodeToDisplay(editorRef.current.getValue().split("\n"));
-            }, 200);
           }}
           options={{ readOnly: readOnlyMode }}
         />
