@@ -78,7 +78,7 @@ const CodeRoom: React.FC = () => {
   const handelTyping = () => {
     setCodeToDisplay(editorRef.current.getValue().split("\n"));
 
-    if (Date.now() - lastUpdate > 700) {
+    if (Date.now() - lastUpdate > 300) {
       socket.emit(
         "user-typing",
         editorRef.current.getValue().split("\n"),
