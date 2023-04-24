@@ -78,7 +78,7 @@ let test = 0
     setCodeToDisplay(editorRef.current.getValue().split('\n'));
      
     if(Date.now()-lastUpdate > 500){
-      socket.emit("user-typing", codeToDisplay, topic);
+      socket.emit("user-typing", (editorRef.current.getValue().split('\n')), topic);
       console.log("if");
       lastUpdate = Date.now()
     }else {
@@ -187,8 +187,8 @@ let test = 0
           onChange={()=>{
             setTimeout(() => {
               handelTyping();
-              // setCodeToDisplay(editorRef.current.getValue().split('\n'));
-              console.log(codeToDisplay);
+              setCodeToDisplay(editorRef.current.getValue().split('\n'));
+              console.log(editorRef.current.getValue().split('\n'));
               
             }, 200);
           }}
