@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import "./CodeRoom.css";
 import { useParams } from "react-router-dom";
-import data from "../../rooms.json";
 import "highlight.js/styles/github.css";
 import Editor from "@monaco-editor/react";
 import Header from "../Header/Header";
 import { io } from "socket.io-client";
 import GeneralButton from "../GeneralButton/GeneralButton";
 import axios from "axios";
-import { IRootState } from "../../store/store";
 import { IRoom } from "../../store/interface";
 
 const CodeRoom: React.FC = () => {
@@ -23,12 +21,10 @@ const CodeRoom: React.FC = () => {
   const [codeToDisplay, setCodeToDisplay] = useState<string[] | undefined>(
     roomDetails.value
   );
-  const [userId, setUserId] = useState<string>();
   const [mentorId, setMentorId] = useState<string>();
   const [readOnlyMode, setReadOnlyMode] = useState<boolean>();
   const [isSave, setIsSave] = useState<boolean>(false);
-  const [ipAddress, setIpAddress] = useState<string>("");
-  const [userNickName, setUserNickName] = useState<string | null>("")
+  const [userNickName, setUserNickName] = useState<string | null>("DataBase")
 
   // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
@@ -40,6 +36,7 @@ const CodeRoom: React.FC = () => {
   };
   const [copy, setCopy] = useState<boolean>(false);
   let test = 0;
+  // =============================================
   // socket
   const socket = useMemo(
     () =>
@@ -52,7 +49,6 @@ const CodeRoom: React.FC = () => {
   useEffect(() => {
     // get the api and save in session storage:
     socket.on("ip-address", (ip) => {
-      setIpAddress(ip);
       sessionStorage.setItem("ip-address", ip);
     });
 
@@ -60,16 +56,14 @@ const CodeRoom: React.FC = () => {
     socket.emit("specific-room", topic);
     socket.on("mentor-id", (mentorId: string) => {
       setMentorId(mentorId);
-      console.log("mentorId", mentorId);
 
       if (String(mentorId) === sessionStorage.getItem("ip-address")) {
         setReadOnlyMode(true);
       }
     });
-    //  ===========================================
+    //  cleanup function
     return () => {
       socket.off("specific-room");
-      socket.off("send-code");
     };
   }, [socket]);
 
@@ -86,9 +80,7 @@ const CodeRoom: React.FC = () => {
     if (Date.now() - lastUpdate > 300) {
       socket.emit(
         "user-typing",editorRef.current.getValue().split("\n"), userNickName,topic);
-      console.log("if");
     } else {
-      console.log("else",(Date.now() - lastUpdate));
       setTimeout(() => {
         socket.emit(
           "user-typing",
@@ -99,13 +91,12 @@ const CodeRoom: React.FC = () => {
   };
 
   //  getting others user code:
-  socket.on("send-code", (code: any,userName:string) => {
-    console.log(code,userName);
-    
+  socket.on("send-code", (code: any,userName:string) => {    
     setCodeToDisplay(code);
     setUserNickName(userName)
   });
 
+  // when save button clicked
   const handelSave = () => {
     setIsSave(true);
     // api request to save the code:
@@ -133,11 +124,12 @@ const CodeRoom: React.FC = () => {
       setIsSave(false);
     }, 3000);
   };
-
+// when "Im not a mentor" clicked
   const notMentorStatus = () => {
     socket.emit("not-mentor");
     setReadOnlyMode(false);
   };
+  // when "Im a mentor" clicked
   const mentorStatus = () => {
     socket.emit("is-mentor");
     setReadOnlyMode(true);
@@ -152,8 +144,6 @@ const CodeRoom: React.FC = () => {
     socket.connect();
 
     return () => {
-      console.log("disconnect");
-
       socket.disconnect();
     };
   }, []);
@@ -230,7 +220,6 @@ const CodeRoom: React.FC = () => {
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          // onChange={() =>handelTyping}
           onChange={() => {
               handelTyping();
               setCodeToDisplay(editorRef.current.getValue().split("\n"));
