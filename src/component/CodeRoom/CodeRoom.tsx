@@ -74,7 +74,7 @@ let test = 0
   let lastUpdate = 0
   // sending the user code:
   const handelTyping = () => {
-    console.log(codeToDisplay);
+    console.log('111111111',codeToDisplay);
     setCodeToDisplay(editorRef.current.getValue().split('\n'));
      
     if(Date.now()-lastUpdate > 500){
@@ -185,10 +185,10 @@ let test = 0
           value={codeToDisplay?.join("\n")}
           // onChange={() =>handelTyping}
           onChange={()=>{
+            console.log('2',editorRef.current.getValue().split('\n'));
             setTimeout(() => {
               handelTyping();
               setCodeToDisplay(editorRef.current.getValue().split('\n'));
-              console.log(editorRef.current.getValue().split('\n'));
               
             }, 200);
           }}
