@@ -80,15 +80,12 @@ const CodeRoom: React.FC = () => {
     setCodeToDisplay(editorRef.current.getValue().split("\n"));
     if(sessionStorage.getItem('nickName') !== null){
       setUserNickName(sessionStorage.getItem('nickName'))
-    } else {
+    } else if(sessionStorage.getItem('nickName') === 'Add nick name') {
       setUserNickName(sessionStorage.getItem('ip=address'))
     }
     if (Date.now() - lastUpdate > 300) {
       socket.emit(
-        "user-typing",
-        editorRef.current.getValue().split("\n"), userNickName,
-        topic
-      );
+        "user-typing",editorRef.current.getValue().split("\n"), userNickName,topic);
       console.log("if");
     } else {
       console.log("else",(Date.now() - lastUpdate));
@@ -103,6 +100,8 @@ const CodeRoom: React.FC = () => {
 
   //  getting others user code:
   socket.on("send-code", (code: any,userName:string) => {
+    console.log(code,userName);
+    
     setCodeToDisplay(code);
     setUserNickName(userName)
   });
