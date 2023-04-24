@@ -28,6 +28,7 @@ const CodeRoom: React.FC = () => {
   const [readOnlyMode, setReadOnlyMode] = useState<boolean>();
   const [isSave, setIsSave] = useState<boolean>(false);
   const [ipAddress, setIpAddress] = useState<string>("");
+  const [userNickName, setUserNickName] = useState<string | null>("")
 
   // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
@@ -77,11 +78,15 @@ const CodeRoom: React.FC = () => {
   // sending the user code:
   const handelTyping = () => {
     setCodeToDisplay(editorRef.current.getValue().split("\n"));
-
+    if(sessionStorage.getItem('nickName') !== null){
+      setUserNickName(sessionStorage.getItem('nickName'))
+    } else {
+      setUserNickName(sessionStorage.getItem('ip=address'))
+    }
     if (Date.now() - lastUpdate > 300) {
       socket.emit(
         "user-typing",
-        editorRef.current.getValue().split("\n"),
+        editorRef.current.getValue().split("\n"), userNickName,
         topic
       );
       console.log("if");
@@ -90,15 +95,16 @@ const CodeRoom: React.FC = () => {
       setTimeout(() => {
         socket.emit(
           "user-typing",
-          editorRef.current.getValue().split("\n"),topic);
+          editorRef.current.getValue().split("\n"),userNickName,topic);
       }, 700 - (Date.now() - lastUpdate));
     }
     lastUpdate = Date.now();
   };
 
   //  getting others user code:
-  socket.on("send-code", (code: any) => {
+  socket.on("send-code", (code: any,userName:string) => {
     setCodeToDisplay(code);
+    setUserNickName(userName)
   });
 
   const handelSave = () => {
@@ -200,9 +206,9 @@ const CodeRoom: React.FC = () => {
             />
           )}
         </div>
-        <button></button>
         <div id="block-top">
           <p>{roomDetails?.language}</p>
+          <p>Last Update By:{userNickName}</p>
           <button
             id="copy-btn"
             onClick={() => {
