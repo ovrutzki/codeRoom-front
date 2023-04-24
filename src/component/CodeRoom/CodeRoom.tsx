@@ -49,10 +49,7 @@ let test = 0
     // get the api and save in session storage:
     socket.on('ip-address', (ip) => {
      setIpAddress(ip);
-     sessionStorage.setItem('ip-address', ip)
-     console.log('address: ',ipAddress);
-     console.log("ip",ip);
-     
+     sessionStorage.setItem('ip-address', ip)     
     });
     
     // join to specific room:
@@ -63,7 +60,6 @@ let test = 0
 
       if (String(mentorId) === sessionStorage.getItem('ip-address')) {
         setReadOnlyMode(true)
-        console.log(readOnlyMode);
       }
     })
   //  ===========================================
@@ -79,7 +75,7 @@ let test = 0
   // sending the user code:
   const handelTyping = () => {
     console.log(codeToDisplay);
-     setCodeToDisplay(editorRef.current.getValue().split('\n'));
+    setCodeToDisplay(editorRef.current.getValue().split('\n'));
      
     if(Date.now()-lastUpdate > 500){
       socket.emit("user-typing", codeToDisplay, topic);
@@ -191,7 +187,7 @@ let test = 0
           onChange={()=>{
             setTimeout(() => {
               handelTyping();
-              setCodeToDisplay(editorRef.current.getValue().split('\n'));
+              // setCodeToDisplay(editorRef.current.getValue().split('\n'));
               console.log(codeToDisplay);
               
             }, 200);
