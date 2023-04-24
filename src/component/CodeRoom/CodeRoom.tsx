@@ -187,15 +187,15 @@ let test = 0
           onMount={handelEditorDidMount}
           language={roomDetails?.language}
           value={codeToDisplay?.join("\n")}
-          onChange={() =>handelTyping()}
-          // onChange={()=>{
-          //   setTimeout(() => {
-          //     handelTyping();
-          //     setCodeToDisplay(editorRef.current.getValue().split('\n'));
-          //     console.log(codeToDisplay);
+          // onChange={() =>handelTyping}
+          onChange={()=>{
+            setTimeout(() => {
+              handelTyping();
+              setCodeToDisplay(editorRef.current.getValue().split('\n'));
+              console.log(codeToDisplay);
               
-          //   }, 100);
-          // }}
+            }, 200);
+          }}
           options={{readOnly: readOnlyMode}}
         />
         <div id="block-bottom"></div>
