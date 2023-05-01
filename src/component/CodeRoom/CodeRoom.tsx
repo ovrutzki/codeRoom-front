@@ -8,6 +8,7 @@ import { io } from "socket.io-client";
 import GeneralButton from "../GeneralButton/GeneralButton";
 import axios from "axios";
 import { IRoom } from "../../store/interface";
+import { transform } from "@babel/standalone";
 
 const CodeRoom: React.FC = () => {
   const { topic } = useParams();
@@ -24,7 +25,9 @@ const CodeRoom: React.FC = () => {
   const [mentorId, setMentorId] = useState<string>();
   const [readOnlyMode, setReadOnlyMode] = useState<boolean>();
   const [isSave, setIsSave] = useState<boolean>(false);
-  const [userNickName, setUserNickName] = useState<string | null>("DataBase")
+  const [userNickName, setUserNickName] = useState<string | null>("DataBase");
+  const [result, setResult] = useState<string>("");
+  const [html, setHtml] = useState("");
 
   // getting the editor value:
   const handelEditorDidMount = (editor: any, monaco: any) => {
@@ -72,28 +75,35 @@ const CodeRoom: React.FC = () => {
   // sending the user code:
   const handelTyping = () => {
     setCodeToDisplay(editorRef.current.getValue().split("\n"));
-    if(sessionStorage.getItem('nickName') !== null){
-      setUserNickName(sessionStorage.getItem('nickName'))
-    } else if(sessionStorage.getItem('nickName') === 'Add nick name') {
-      setUserNickName(sessionStorage.getItem('ip=address'))
+    if (sessionStorage.getItem("nickName") !== null) {
+      setUserNickName(sessionStorage.getItem("nickName"));
+    } else if (sessionStorage.getItem("nickName") === "Add nick name") {
+      setUserNickName(sessionStorage.getItem("ip=address"));
     }
     if (Date.now() - lastUpdate > 300) {
       socket.emit(
-        "user-typing",editorRef.current.getValue().split("\n"), userNickName,topic);
+        "user-typing",
+        editorRef.current.getValue().split("\n"),
+        userNickName,
+        topic
+      );
     } else {
       setTimeout(() => {
         socket.emit(
           "user-typing",
-          editorRef.current.getValue().split("\n"),userNickName,topic);
+          editorRef.current.getValue().split("\n"),
+          userNickName,
+          topic
+        );
       }, 700 - (Date.now() - lastUpdate));
     }
     lastUpdate = Date.now();
   };
 
   //  getting others user code:
-  socket.on("send-code", (code: any,userName:string) => {    
+  socket.on("send-code", (code: any, userName: string) => {
     setCodeToDisplay(code);
-    setUserNickName(userName)
+    setUserNickName(userName);
   });
 
   // when save button clicked
@@ -124,7 +134,7 @@ const CodeRoom: React.FC = () => {
       setIsSave(false);
     }, 3000);
   };
-// when "Im not a mentor" clicked
+  // when "Im not a mentor" clicked
   const notMentorStatus = () => {
     socket.emit("not-mentor");
     setReadOnlyMode(false);
@@ -137,6 +147,26 @@ const CodeRoom: React.FC = () => {
   socket.on("not-mentor", () => {
     setReadOnlyMode(false);
   });
+
+  // compile the code:
+
+  const handelCompile = () => {
+    if (roomDetails?.language === "javascript") {
+      try {
+        if (codeToDisplay) {
+          const runCode = transform(editorRef.current.getValue(), {
+            presets: ["react"],
+          }).code;
+          setResult(eval(String(runCode)));
+        }
+      } catch (error: any) {
+        setResult(error.toString());
+      }
+    } else if (topic === "html") {
+      const inputHtml = editorRef.current.getValue();
+      setHtml(inputHtml);
+    }
+  };
 
   // cleanup function
 
@@ -211,22 +241,38 @@ const CodeRoom: React.FC = () => {
             {!copy ? "Copy Code " : "Copied!"}
           </button>
         </div>
-
-        <Editor
-          min-height="fit-content"
-          height="40vw"
-          width="90vw"
-          theme="vs-dark"
-          onMount={handelEditorDidMount}
-          language={roomDetails?.language}
-          value={codeToDisplay?.join("\n")}
-          onChange={() => {
+        <div className="codeBlock">
+          <Editor
+            min-height="fit-content"
+            height="40vw"
+            width="45vw"
+            theme="vs-dark"
+            onMount={handelEditorDidMount}
+            language={roomDetails?.language}
+            value={codeToDisplay?.join("\n")}
+            onChange={() => {
               handelTyping();
               setCodeToDisplay(editorRef.current.getValue().split("\n"));
-          }}
-          options={{ readOnly: readOnlyMode }}
-        />
-        <div id="block-bottom"></div>
+            }}
+            options={{ readOnly: readOnlyMode }}
+          />
+          {roomDetails?.language === "javascript" ? (
+            <pre className="result">{result}</pre>
+          ) : (
+            <div
+              className="result"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          )}
+        </div>
+        <div id="block-bottom">
+          <GeneralButton
+            function={handelCompile}
+            text={"run"}
+            bgcolor={"rgb(91, 227, 239)"}
+            textColor={"black"}
+          />
+        </div>
       </div>
       <div id="downer-div"></div>
     </div>

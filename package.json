@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/babel__standalone": "^7.1.4",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.24",
     "@types/react": "^18.0.37",
@@ -53,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/standalone": "^7.21.7",
     "@types/react-syntax-highlighter": "^15.5.6"
   }
 }
